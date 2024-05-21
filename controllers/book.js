@@ -97,6 +97,40 @@ exports.modifyOneBook = (req, res, next) => {
     });
 };
 
+exports.rateOneBook = (req, res, next) => {
+  const userId = req.body.userId;
+  const grade = req.body.rating;
+
+  Book.findOne({ _id: req.params.id })
+    .then((book) => {
+      if (book.userId === req.auth.userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+
+      const hasAlreadyRated = book.ratings.some(
+        (rating) => rating.userId.toString() === userId
+      );
+      if (hasAlreadyRated) {
+        return res
+          .status(400)
+          .json({ message: "L'utilisateur a déjà noté ce livre" });
+      }
+
+      book.ratings.push({ userId, grade });
+      const totalGrade = book.ratings.reduce(
+        (accumulator, currentValue) => accumulator + currentValue.grade,
+        0
+      );
+      book.averageRating = totalGrade / book.ratings.length;
+
+      book
+        .save()
+        .then(() => res.status(200).json(book))
+        .catch((error) => res.status(400).json({ error }));
+    })
+    .catch((error) => res.status(400).json({ error }));
+};
+
 exports.getAllBook = (req, res, next) => {
   Book.find()
     .then((books) => {
