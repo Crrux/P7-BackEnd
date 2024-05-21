@@ -9,7 +9,8 @@ const books = require("../controllers/book");
 
 router.post("/", auth, multer, optimizeImg, books.createBook);
 router.delete("/:id", auth, books.deleteBook);
-router.get("/:id", books.getOne);
-router.get("/", books.getAll);
+router.put("/:id", auth, multer, optimizeImg, books.modifyOneBook);
+router.get("/:id", books.getOneBook);
+router.get("/", books.getAllBook);
 
 module.exports = router;
