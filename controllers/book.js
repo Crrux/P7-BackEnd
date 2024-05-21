@@ -144,6 +144,7 @@ exports.getAllBook = (req, res, next) => {
 exports.getOneBook = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
     .then((book) => {
+      book.averageRating = Math.floor(book.averageRating * 10) / 10;
       res.status(200).json(book);
     })
     .catch((error) => {
