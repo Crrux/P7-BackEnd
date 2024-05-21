@@ -10,19 +10,22 @@ const optimizeImg = async (req, res, next) => {
     await sharp(originalImagePath)
       .webp({ quality: 80 })
       .resize(400)
-      .toFile(optimizedImagePath);
-
-    req.file.path = optimizedImagePath;
-    req.file.filename = optimizedImageName;
-
-    fs.unlink(originalImagePath, (error) => {
-      if (error) {
-        console.error("Impossible de supprimer l'image originale : ", error);
-      }
-    });
-  } catch (error) {
-    console.error("Impossible d'optimiser l'image : ", error);
-    res.status(500).json({ message: "Impossible d'optimiser l'image" });
+      .toFile(optimizedImagePath)
+      .then(() => {
+        req.file.path = optimizedImagePath;
+        req.file.filename = optimizedImageName;
+        // Supprimer l'image originale
+        fs.unlink(originalImagePath, (err) => {
+          if (err) {
+            console.error(err);
+            return;
+          }
+          console.log("Original image deleted successfully");
+        });
+      });
+    next();
+  } catch (err) {
+    console.error(err);
   }
 };
 
