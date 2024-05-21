@@ -45,10 +45,6 @@ exports.deleteBook = (req, res, next) => {
 };
 
 exports.modifyOneBook = (req, res, next) => {
-  if (!req.params.id) {
-    return res.status(400).json({ error: "L'ID du livre est manquant." });
-  }
-
   Book.findOne({ _id: req.params.id })
     .then((bookFound) => {
       if (!bookFound) {
@@ -69,10 +65,10 @@ exports.modifyOneBook = (req, res, next) => {
         if (req.file) {
           const filename = bookFound.imageUrl.split("/images/")[1];
           fs.unlink(`images/${filename}`, (err) => {
-            if (err) {
+            if (error) {
               console.log(
                 "Erreur lors de la suppression de l'ancienne image:",
-                err
+                error
               );
             }
             Book.updateOne(
