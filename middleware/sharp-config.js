@@ -6,7 +6,6 @@ const optimizeImg = async (req, res, next) => {
   if (!req.file) return next();
   const originalImagePath = req.file.path;
   const filename = originalImagePath.split("images\\")[1];
-  console.log(filename);
   const optimizedImageName = `${path.basename(
     originalImagePath,
     path.extname(originalImagePath)
@@ -24,20 +23,14 @@ const optimizeImg = async (req, res, next) => {
         console.error(error);
         return;
       }
-
-      console.log(info);
-
+      sharp.cache(false);
       fs.unlink(`images/${filename}`, (unlinkErr) => {
         if (unlinkErr) {
           console.error(unlinkErr);
-        } else {
-          console.log("\nDeleted Image: ", originalImagePath);
         }
       });
       req.file.path = optimizedImagePath;
       req.file.filename = optimizedImageName;
-      console.log(req.file.path);
-      console.log(originalImagePath); // undefined
       next();
     });
 };
