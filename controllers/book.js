@@ -64,7 +64,7 @@ exports.modifyOneBook = (req, res, next) => {
         delete bookObject._id;
         if (req.file) {
           const filename = bookFound.imageUrl.split("/images/")[1];
-          fs.unlink(`images/${filename}`, (err) => {
+          fs.unlink(`images/${filename}`, (error) => {
             if (error) {
               console.log(
                 "Erreur lors de la suppression de l'ancienne image:",
