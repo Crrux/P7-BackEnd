@@ -1,13 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
+require("dotenv").config();
 
 const userRoutes = require("./routes/user");
 const bookRoutes = require("./routes/book");
 
 mongoose
   .connect(
-    "mongodb+srv://admin:hRQhn8vk4aUKtw2weDTuFBwxFyb5FY@cluster0.kdlqebf.mongodb.net/MonVieuxGrimoire"
+    `mongodb+srv://${process.env.USER_ID}:${process.env.USER_KEY}@cluster0.kdlqebf.mongodb.net/MonVieuxGrimoire`
   )
   .then(() => console.log("Connexion à MongoDB réussie !"))
   .catch(() => console.log("Connexion à MongoDB échouée !"));
